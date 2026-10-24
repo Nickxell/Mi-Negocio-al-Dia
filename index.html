@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b6e4f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mi Negocio">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>Mi Negocio Al Día</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f6f7f4;--card:#fff;--tx:#1d2a24;--mut:#667068;--bd:#dde2dc;--pri:#0b6e4f;--in:#0b6e4f;--out:#c0392b;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121815;--card:#1b2420;--tx:#e8eee9;--mut:#9aa89f;--bd:#2c3832;--pri:#3cc08f;--in:#3cc08f;--out:#ef7b6e;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121815;--card:#1b2420;--tx:#e8eee9;--mut:#9aa89f;--bd:#2c3832;--pri:#3cc08f;--in:#3cc08f;--out:#ef7b6e;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.45}
+main{max-width:760px;margin:0 auto;padding:16px}
+h1{font-size:1.5rem;margin:8px 0 2px}
+.sub{color:var(--mut);margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:14px}
+h2{font-size:1.05rem;margin:0 0 10px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px}
+.stat small{color:var(--mut);display:block}
+.stat b{font-size:1.15rem}
+.in{color:var(--in)}.out{color:var(--out)}
+label{display:block;font-size:.85rem;color:var(--mut);margin-bottom:4px}
+input,select,button{font:inherit;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);width:100%}
+button{background:var(--pri);color:#fff;border:0;font-weight:600;cursor:pointer}
+button.ghost{background:transparent;color:var(--out);width:auto;padding:4px 8px;font-weight:400}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.tabs{display:flex;gap:6px;margin-bottom:14px}
+.tabs button{background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+.tabs button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.bar{height:12px;background:var(--bd);border-radius:99px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;background:var(--pri);width:0}
+ul{list-style:none;margin:0;padding:0}
+li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--bd)}
+li:last-child{border:0}
+li span small{display:block;color:var(--mut)}
+.tip{background:var(--bg);border-left:4px solid var(--pri);padding:10px 12px;border-radius:8px;font-size:.92rem}
+.hide{display:none}
+.scan{border:2px dashed var(--bd);border-radius:12px;padding:12px;margin-bottom:12px}
+.scan .btn{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;background:var(--bd);color:var(--mut);cursor:not-allowed;opacity:.9}
+.badge{background:var(--pri);color:#fff;font-size:.72rem;padding:2px 8px;border-radius:99px}
+.pbar{height:6px;background:var(--bd);border-radius:99px;margin-top:6px;overflow:hidden}
+.pbar i{display:block;height:100%}
+.cur{font-size:.72rem;background:var(--pri);color:#fff;padding:1px 7px;border-radius:99px;margin-left:6px}
+li.p{display:block}
+li.p .top{display:flex;justify-content:space-between;gap:8px}
+.tabs{flex-wrap:wrap}
+.tabs button{flex:1 1 auto;width:auto;white-space:nowrap;padding:8px 12px;font-size:.92rem}
+.qty{display:flex;align-items:center;gap:8px}
+.qty b{min-width:28px;text-align:center;font-size:1.05rem}
+.qb{width:38px;height:38px;padding:0;border-radius:50%;font-size:1.3rem;line-height:1}
+@media(max-width:520px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<h1>📒 Mi Negocio Al Día</h1>
+<p class="sub">Controla tus ventas, gastos y ahorro en córdobas. Sin cuentas, sin complicaciones.</p>
+
+<div class="tabs">
+  <button class="on" data-t="caja">Caja</button>
+  <button data-t="resumen">Resumen</button>
+  <button data-t="inventario">Inventario</button>
+  <button data-t="meta">Meta de ahorro</button>
+  <button data-t="precio">Calcular precio</button>
+</div>
+
+<section id="caja">
+  <div class="grid" style="margin-bottom:14px">
+    <div class="stat"><small>Ingresos</small><b class="in" id="sIn">C$ 0</b></div>
+    <div class="stat"><small>Gastos</small><b class="out" id="sOut">C$ 0</b></div>
+    <div class="stat"><small>Ganancia</small><b id="sBal">C$ 0</b></div>
+  </div>
+  <div class="card">
+    <h2>Registrar movimiento</h2>
+    <div class="scan wip">
+      <button type="button" class="btn" disabled aria-disabled="true">📷 Escanear factura de un gasto <span class="badge">Próximamente</span></button>
+      <div class="sub" style="margin:8px 0 0;font-size:.88rem">En desarrollo: pronto podrás tomar una foto de tu factura y los precios se llenarán solos.</div>
+    </div>
+    <div class="row">
+      <div><label for="type">Tipo</label><select id="type"><option value="in">Venta (ingreso)</option><option value="out">Gasto</option></select></div>
+      <div><label for="amt">Monto (C$)</label><input id="amt" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+    </div>
+    <div class="row">
+      <div><label for="desc">Descripción</label><input id="desc" placeholder="Ej: venta de nacatamales"></div>
+      <div><label for="cat">Categoría</label><select id="cat"><option>Ventas</option><option>Mercadería</option><option>Transporte</option><option>Servicios (luz, agua)</option><option>Otros</option></select></div>
+    </div>
+    <button id="add">Agregar</button>
+  </div>
+  <div class="card">
+    <h2>Movimientos recientes</h2>
+    <ul id="list"></ul>
+    <p id="empty" class="sub">Aún no hay movimientos. Registra tu primera venta.</p>
+  </div>
+  <div class="tip" id="tip"></div>
+</section>
+
+<section id="resumen" class="hide">
+  <div class="grid" style="grid-template-columns:1fr 1fr;margin-bottom:14px">
+    <div class="stat"><small>Esta quincena</small><b id="rQ">C$ 0</b></div>
+    <div class="stat"><small>Este mes</small><b id="rM">C$ 0</b></div>
+  </div>
+  <div class="card">
+    <h2>Ganancia por periodo</h2>
+    <div class="tabs" style="margin-bottom:8px">
+      <button class="on" id="vQ">Por quincena</button>
+      <button id="vM">Por mes</button>
+    </div>
+    <ul id="plist"></ul>
+    <p id="pempty" class="sub">Registra movimientos en Caja para ver tu resumen.</p>
+  </div>
+  <div class="tip">💡 La quincena 1 va del día 1 al 15 y la quincena 2 del 16 al último día del mes. Ganancia = ventas − gastos.</div>
+</section>
+
+<section id="inventario" class="hide">
+  <div class="grid" style="grid-template-columns:1fr 1fr;margin-bottom:14px">
+    <div class="stat"><small>Productos</small><b id="iN">0</b></div>
+    <div class="stat"><small>Por agotarse</small><b class="out" id="iLow">0</b></div>
+  </div>
+  <div class="card">
+    <h2>Agregar producto</h2>
+    <div class="row">
+      <div><label for="iname">Producto</label><input id="iname" placeholder="Ej: arroz (libra)"></div>
+      <div><label for="iqty">Cantidad</label><input id="iqty" type="number" min="0" step="1" inputmode="numeric" value="1"></div>
+    </div>
+    <div class="row">
+      <div><label for="imin">Avisar cuando queden (opcional)</label><input id="imin" type="number" min="0" step="1" inputmode="numeric" placeholder="Ej: 3"></div>
+      <div style="align-self:end"><button id="iadd">Agregar</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Mi inventario</h2>
+    <ul id="ilist"></ul>
+    <p id="iempty" class="sub">Aún no has agregado productos.</p>
+  </div>
+  <div class="tip">💡 Usa − cuando vendas y + cuando recibas mercadería. Pon un mínimo para que la app te avise cuándo reponer.</div>
+</section>
+
+<section id="meta" class="hide">
+  <div class="card">
+    <h2>Mi meta de ahorro</h2>
+    <label for="goal">¿Cuánto quieres ahorrar? (C$)</label>
+    <input id="goal" type="number" min="0" inputmode="decimal" placeholder="Ej: 5000">
+    <div class="bar"><i id="gbar"></i></div>
+    <p id="gtxt" class="sub"></p>
+    <p class="sub">Tu ganancia acumulada de la pestaña Caja cuenta como ahorro.</p>
+  </div>
+  <div class="tip">💡 Regla simple: separa el 10 % de cada venta apenas la recibas. Lo que ahorras primero, no se gasta por error.</div>
+</section>
+
+<section id="precio" class="hide">
+  <div class="card">
+    <h2>¿A cuánto debo vender?</h2>
+    <div class="row">
+      <div><label for="cost">Costo por unidad (C$)</label><input id="cost" type="number" min="0" inputmode="decimal" placeholder="Ej: 20"></div>
+      <div><label for="mg">Ganancia deseada (%)</label><input id="mg" type="number" min="0" inputmode="decimal" value="30"></div>
+    </div>
+    <p id="pres" class="sub">Escribe el costo para ver el precio sugerido.</p>
+  </div>
+  <div class="tip">💡 Incluye en el costo todo: ingredientes, empaque, transporte y tu tiempo. Muchos negocios pierden por no contarlo.</div>
+</section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+let tx=[],goal=0;
+try{tx=JSON.parse(localStorage.getItem('mnad_tx')||'[]');goal=+localStorage.getItem('mnad_goal')||0}catch(e){tx=[];goal=0}
+const save=()=>{try{localStorage.setItem('mnad_tx',JSON.stringify(tx));localStorage.setItem('mnad_goal',goal)}catch(e){}};
+const money=n=>'C$ '+n.toLocaleString('es-NI',{minimumFractionDigits:0,maximumFractionDigits:2});
+const tips=[
+ 'Anota cada venta, aunque sea pequeña: lo que no se mide, no se puede mejorar.',
+ 'Separa el dinero del negocio del dinero de tu casa para ver la ganancia real.',
+ 'Revisa tus gastos cada semana; los “gastitos” suman más de lo que parece.',
+ 'Si tu ganancia es baja, revisa primero tus precios antes de recortar calidad.'];
+function render(){
+  const i=tx.filter(t=>t.type==='in').reduce((a,t)=>a+t.amt,0);
+  const o=tx.filter(t=>t.type==='out').reduce((a,t)=>a+t.amt,0);
+  const b=i-o;
+  $('sIn').textContent=money(i);$('sOut').textContent=money(o);
+  $('sBal').textContent=money(b);$('sBal').className=b<0?'out':'in';
+  $('list').innerHTML=tx.slice().reverse().slice(0,30).map(t=>
+   `<li><span>${esc(t.desc||t.cat)}<small>${esc(t.cat)} · ${t.date}</small></span>
+    <span class="${t.type}">${t.type==='in'?'+':'−'}${money(t.amt)} <button class="ghost" data-d="${t.id}" aria-label="Eliminar">✕</button></span></li>`).join('');
+  $('empty').classList.toggle('hide',tx.length>0);
+  $('tip').textContent='💡 '+(b<0&&tx.length?'Tus gastos superan tus ventas. Revisa cuáles puedes reducir esta semana.':tips[tx.length%tips.length]);
+  renderRes();
+  $('goal').value=goal||'';
+  const p=goal>0?Math.max(0,Math.min(100,b/goal*100)):0;
+  $('gbar').style.width=p+'%';
+  $('gtxt').textContent=goal>0?`Llevas ${money(Math.max(b,0))} de ${money(goal)} (${p.toFixed(0)} %).`:'Define una meta para ver tu avance.';
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('add').onclick=()=>{
+  const amt=parseFloat($('amt').value);
+  if(!(amt>0)){$('amt').focus();return}
+  tx.push({id:Date.now(),type:$('type').value,desc:$('desc').value.trim(),cat:$('cat').value,amt,date:new Date().toLocaleDateString('es-NI')});
+  $('amt').value='';$('desc').value='';save();render();
+};
+$('list').onclick=e=>{const d=e.target.dataset.d;if(d){tx=tx.filter(t=>t.id!=d);save();render()}};
+$('goal').oninput=e=>{goal=+e.target.value||0;save();render()};
+function calc(){
+  const c=parseFloat($('cost').value),m=parseFloat($('mg').value)||0;
+  $('pres').innerHTML=c>0?`Precio sugerido: <b>${money(c*(1+m/100))}</b> por unidad<br>Ganas ${money(c*m/100)} en cada una.`:'Escribe el costo para ver el precio sugerido.';
+}
+$('cost').oninput=calc;$('mg').oninput=calc;
+document.querySelectorAll('.tabs button[data-t]').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button[data-t]').forEach(x=>x.classList.toggle('on',x===b));
+  ['caja','resumen','inventario','meta','precio'].forEach(s=>$(s).classList.toggle('hide',s!==b.dataset.t));
+});
+const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+let view='q';
+function keyOf(ts,v){const d=new Date(ts),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0');
+  return v==='q'?`${y}-${m}-${d.getDate()<=15?1:2}`:`${y}-${m}`}
+function labelOf(ts,v){const d=new Date(ts),y=d.getFullYear(),mo=d.getMonth();
+  if(v==='m')return MES[mo]+' '+y;
+  const last=new Date(y,mo+1,0).getDate();
+  return (d.getDate()<=15?'1–15':'16–'+last)+' '+MES[mo]+' '+y}
+function periods(v){const m={};
+  tx.forEach(t=>{const k=keyOf(t.id,v),o=m[k]||(m[k]={k,label:labelOf(t.id,v),i:0,o:0});
+    if(t.type==='in')o.i+=t.amt;else o.o+=t.amt});
+  return Object.keys(m).sort().reverse().map(k=>m[k])}
+function renderRes(){
+  const now=Date.now(),sum=v=>{const k=keyOf(now,v),p=periods(v).find(x=>x.k===k);return p?p.i-p.o:0};
+  const q=sum('q'),mo=sum('m');
+  $('rQ').textContent=money(q);$('rQ').className=q<0?'out':'in';
+  $('rM').textContent=money(mo);$('rM').className=mo<0?'out':'in';
+  const ps=periods(view),cur=keyOf(now,view),mx=Math.max(1,...ps.map(p=>Math.abs(p.i-p.o)));
+  $('pempty').classList.toggle('hide',ps.length>0);
+  $('plist').innerHTML=ps.map(p=>{const g=p.i-p.o;
+    return `<li class="p"><div class="top"><span>${esc(p.label)}${p.k===cur?'<span class="cur">actual</span>':''}<small>Ventas ${money(p.i)} · Gastos ${money(p.o)}</small></span><b class="${g<0?'out':'in'}">${g<0?'−':''}${money(Math.abs(g))}</b></div><div class="pbar"><i style="width:${Math.abs(g)/mx*100}%;background:var(--${g<0?'out':'in'})"></i></div></li>`}).join('')}
+$('vQ').onclick=()=>{view='q';$('vQ').classList.add('on');$('vM').classList.remove('on');renderRes()};
+$('vM').onclick=()=>{view='m';$('vM').classList.add('on');$('vQ').classList.remove('on');renderRes()};
+let inv=[];
+try{inv=JSON.parse(localStorage.getItem('mnad_inv')||'[]')}catch(e){inv=[]}
+const saveInv=()=>{try{localStorage.setItem('mnad_inv',JSON.stringify(inv))}catch(e){}};
+const isLow=i=>i.qty<=0||(i.min>0&&i.qty<=i.min);
+function renderInv(){
+  $('iN').textContent=inv.length;
+  $('iLow').textContent=inv.filter(isLow).length;
+  $('iempty').classList.toggle('hide',inv.length>0);
+  $('ilist').innerHTML=inv.map(i=>`<li><span>${esc(i.name)}${i.qty<=0?'<span class="cur" style="background:var(--out)">Agotado</span>':(isLow(i)?'<span class="cur" style="background:#d98a00">Poco</span>':'')}${i.min>0?`<small>Avisar con ${i.min} o menos</small>`:''}</span>
+    <span class="qty"><button class="qb" data-a="-" data-i="${i.id}" aria-label="Reducir">−</button><b>${i.qty}</b><button class="qb" data-a="+" data-i="${i.id}" aria-label="Aumentar">+</button><button class="ghost" data-x="${i.id}" aria-label="Eliminar">✕</button></span></li>`).join('');
+}
+$('iadd').onclick=()=>{
+  const name=$('iname').value.trim(),qty=Math.max(0,Math.floor(parseFloat($('iqty').value)||0)),min=Math.max(0,Math.floor(parseFloat($('imin').value)||0));
+  if(!name){$('iname').focus();return}
+  const ex=inv.find(i=>i.name.toLowerCase()===name.toLowerCase());
+  if(ex){ex.qty+=qty;if(min)ex.min=min}else inv.push({id:Date.now(),name,qty,min});
+  $('iname').value='';$('iqty').value='1';$('imin').value='';saveInv();renderInv();
+};
+$('ilist').onclick=e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.x){inv=inv.filter(i=>i.id!=b.dataset.x)}
+  else{const it=inv.find(i=>i.id==b.dataset.i);if(!it)return;it.qty=Math.max(0,it.qty+(b.dataset.a==='+'?1:-1))}
+  saveInv();renderInv();
+};
+render();renderInv();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(()=>{})});
+}
+</script>
+</body>
+</html>
